@@ -10,7 +10,7 @@ from simpleFeatureExtractor import SimpleFeatureExtractor
 classificationNum = 3
 path = '../../data/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
-labels = [0, 1, 1] #['normal', 'hole', 'scallop']
+labels = [0, 1, 2] #['normal', 'hole', 'scallop']
 resultFileName = 'simpleFeatures.npz'
 
 
@@ -74,3 +74,9 @@ print('Random Forest:')
 model.fit(x_train,y_train)
 print('Training score: ',model.score(x_train,y_train))
 print('Testing score: ', model.score(x_test,y_test))
+
+from sklearn.metrics import classification_report
+y_true = y_test
+y_pred = model.predict(x_test)
+target_names = ['0', '1','2']
+print(classification_report(y_true, y_pred, target_names=target_names))
