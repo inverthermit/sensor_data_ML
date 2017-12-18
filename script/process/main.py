@@ -4,8 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import os.path
+import sys
+sys.path.append('../')
 from types import SimpleNamespace as Namespace
-from simpleFeatureExtractor import SimpleFeatureExtractor
+from feature.simpleFeatureExtractor import SimpleFeatureExtractor
 
 classificationNum = 3
 path = '../../data/'
