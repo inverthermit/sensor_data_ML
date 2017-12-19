@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import json
 import copy
 from types import SimpleNamespace as Namespace
-from featureExtractor import FeatureExtractor
+from FeatureExtractor import FeatureExtractor
 class TimeSeriesFeatureExtractor (FeatureExtractor):
 
     def getAccelerationFromFile(self,fileName):

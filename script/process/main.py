@@ -7,7 +7,7 @@ import os.path
 import sys
 sys.path.append('../')
 from types import SimpleNamespace as Namespace
-from feature.simpleFeatureExtractor import SimpleFeatureExtractor
+from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 
 classificationNum = 3
 path = '../../data/'
