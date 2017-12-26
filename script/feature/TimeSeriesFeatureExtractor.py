@@ -1,10 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+
+
 import json
 import copy
 from types import SimpleNamespace as Namespace
-from FeatureExtractor import FeatureExtractor
-class TimeSeriesFeatureExtractor (FeatureExtractor):
+from feature.FeatureExtractor import FeatureExtractor
+from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
+
+class TimeSeriesFeatureExtractor (SimpleFeatureExtractor):
+
+
+    def getRollingMean(self, data):
+        print('getRollingMean')
+
+        df = pd.DataFrame({'timeStamp': data[:,4], 'x': data[:,4],
+        'y': data[:,4], 'z': data[:,4], 'w': data[:,4],
+        'mean':data[:,4], 'variance': data[:,4], 'label': data[:,4]})
+        print(df)
+
 
     def getAccelerationFromFile(self,fileName):
         print('Reading acceleration data from file: ',fileName)

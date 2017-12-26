@@ -1,0 +1,53 @@
+****************Start to run classifications***************
+91017
+Random Forest( 1 ):
+Training score:  0.952989164023
+Testing score:  0.659635245001
+             precision    recall  f1-score   support
+
+          0       0.58      0.92      0.71      8303
+          1       0.86      0.44      0.59      9901
+
+avg / total       0.73      0.66      0.64     18204
+
+
+Random Forest( 3 ):
+Training score:  0.977531484762
+Testing score:  0.660733904636
+             precision    recall  f1-score   support
+
+          0       0.58      0.95      0.72      8303
+          1       0.91      0.42      0.57      9901
+
+avg / total       0.76      0.66      0.64     18204
+
+
+Random Forest( 5 ):
+Training score:  0.986073915372
+Testing score:  0.667655460338
+             precision    recall  f1-score   support
+
+          0       0.58      0.96      0.73      8303
+          1       0.93      0.42      0.58      9901
+
+avg / total       0.77      0.67      0.65     18204
+
+Random Forest( 7 ):
+Training score:  0.990029253018
+Testing score:  0.670786640299
+             precision    recall  f1-score   support
+
+          0       0.58      0.97      0.73      8303
+          1       0.94      0.42      0.58      9901
+
+avg / total       0.78      0.67      0.65     18204
+
+Random Forest( 9 ):
+Training score:  0.992940821007
+Testing score:  0.670841573281
+             precision    recall  f1-score   support
+
+          0       0.58      0.97      0.73      8303
+          1       0.94      0.42      0.58      9901
+
+avg / total       0.78      0.67      0.65     18204
