@@ -21,6 +21,8 @@ labels = [0, 1, 1] #['normal', 'hole', 'scallop']
 resultFileName = 'simpleFeatures012.npz'
 fileContent = np.load(path + resultFileName)
 data = fileContent['data']
+
+"""Set headers"""
 df = pd.DataFrame({'timeStamp': data[:,3], 'x': data[:,0], 'y': data[:,1], 'z': data[:,2], 'label': data[:,4]})
 df = df[['timeStamp','x', 'y', 'z', 'label']]
 # print (df)
