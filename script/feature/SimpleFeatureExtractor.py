@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import copy
+import os.path
 from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
 class SimpleFeatureExtractor (FeatureExtractor):
@@ -30,3 +31,14 @@ class SimpleFeatureExtractor (FeatureExtractor):
         for ele in arr:
             ele.append(label)
         return arr
+
+    def saveSimpleFeaturedData(self, path, dataFileNames, labels, resultFileName):
+        if not os.path.isfile(path + resultFileName):
+            allData = list()
+            for i in range(len(dataFileNames)):
+                fileArray = self.getAccelerationFromFile(path + dataFileNames[i])
+                labeledData = self.getLabeledData(fileArray, labels[i])
+                allData.extend(labeledData)
+            np.savez(path + resultFileName, data=allData)
+        else:
+            print('Feature file:\'',path + resultFileName,'\' already exists.')

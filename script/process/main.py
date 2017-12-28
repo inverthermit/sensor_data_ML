@@ -14,24 +14,8 @@ path = '../../data/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
 resultFileName = 'simpleFeatures01.npz'
-
-
-
-if not os.path.isfile(path + resultFileName):
-    print('****************Start to extract features***************')
-    extractor = SimpleFeatureExtractor()
-    allData = list()
-    for i in range(len(dataFileNames)):
-        fileArray = extractor.getAccelerationFromFile(path + dataFileNames[i])
-        print(fileArray[100])
-
-        labeledData = extractor.getLabeledData(fileArray, labels[i])
-        print(labeledData[100])
-        allData.extend(labeledData)
-    print('Length of the whole dataset: ',len(allData))
-
-
-    np.savez(path + resultFileName, data=allData)
+extractor = SimpleFeatureExtractor()
+extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
 
 
 print('****************Start to run classifications***************')
@@ -55,6 +39,8 @@ y_test = y_rand[heldout_len:]
 # y = data[:,4]
 
 for numTree in range(1,11):
+    if(numTree %2 == 0):
+        continue
     """Random Forest"""
     from sklearn.ensemble import RandomForestClassifier
     rf_model = RandomForestClassifier(n_estimators=numTree)
