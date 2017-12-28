@@ -8,28 +8,40 @@ import sys
 sys.path.append('../')
 from types import SimpleNamespace as Namespace
 from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
+from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
+
+# extractor = TimeSeriesFeatureExtractor()
+# extractor.getRollingMean([[1,2, 3, 4, 5, 6],[2,2, 3, 4, 5, 6]])
+import pandas as pd
 
 classificationNum = 3
 path = '../../data/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-resultFileName = 'simpleFeatures01.npz'
-extractor = SimpleFeatureExtractor()
+resultFileName = 'simpleFeatures012.npz'
+
+extractor = TimeSeriesFeatureExtractor()
 extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
 
-
-print('****************Start to run classifications***************')
 fileContent = np.load(path + resultFileName)
 data = fileContent['data']
-print(len(data))
-rand_data = copy.deepcopy(data)
-random.shuffle(rand_data)
-# extract a stack of 28x28 bitmaps
-X_rand = rand_data[:,:3]
-y_rand = rand_data[:,4]
 
-# X_rand = digits[:, 0:784]
-# y_rand = digits[:, 784:785]
+"""['timeStamp',
+    'x', 'y', 'z',
+    'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z',
+    'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
+    'label']
+"""
+train_no_nan = extractor.insertRollingFeatures(data, window = 350)
+
+print('****************Start to run classifications***************')
+rand_data = np.array(copy.deepcopy(train_no_nan))
+random.shuffle(rand_data)
+print(rand_data[0])
+X_rand = rand_data[:,1:10]
+y_rand = rand_data[:,10]
+# print('888888888888', X_rand, '---------', y_rand)
+
 heldout_len = int(len(X_rand)*0.8)
 x_train = X_rand[:heldout_len]
 y_train = y_rand[:heldout_len]
@@ -38,8 +50,8 @@ y_test = y_rand[heldout_len:]
 # X = data[:,:3]
 # y = data[:,4]
 
-for numTree in range(1,11):
-    if(numTree %2 == 0):
+for numTree in range(9,11):
+    if(numTree%2 == 0):
         continue
     """Random Forest"""
     from sklearn.ensemble import RandomForestClassifier
@@ -66,5 +78,29 @@ for numTree in range(1,11):
     from sklearn.metrics import classification_report
     y_true = y_test
     y_pred = model.predict(x_test)
-    target_names = ['0', '1']
+    target_names = ['0', '1', '2']
     print(classification_report(y_true, y_pred, target_names=target_names))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+print('')

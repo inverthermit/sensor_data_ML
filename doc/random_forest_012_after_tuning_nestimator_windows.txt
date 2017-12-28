@@ -1,0 +1,10 @@
+Random Forest( 9 ):
+Training score:  1.0
+Testing score:  0.892412043675 
+             precision    recall  f1-score   support
+
+          0       0.81      1.00      0.90      8456
+          1       1.00      0.94      0.97      8193
+          2       0.00      0.00      0.00      1485
+
+avg / total       0.83      0.89      0.86     18134
