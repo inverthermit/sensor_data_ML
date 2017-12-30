@@ -88,6 +88,7 @@ for i in range(1000):
 print(sess.run([W,b]))
 print(sess.run(loss,{ x: trainingX, y: trainingY}))
 
+"""Multi parameter
 
 
 

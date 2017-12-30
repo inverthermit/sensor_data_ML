@@ -38,7 +38,7 @@ train_no_nan = extractor.insertRollingFeatures(data, window = 350)
 print('****************Start to run classifications***************')
 rand_data = np.array(copy.deepcopy(train_no_nan))
 random.shuffle(rand_data)
-print(rand_data[0])
+print(rand_data[0].tolist())
 X_rand = rand_data[:,1:10]
 y_rand = rand_data[:,10]
 # print('888888888888', X_rand, '---------', y_rand)
