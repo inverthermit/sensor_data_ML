@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import json
 import copy
 import os.path
-from types import SimpleNamespace as Namespace
+# from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
 class SimpleFeatureExtractor (FeatureExtractor):
 

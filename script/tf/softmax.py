@@ -78,7 +78,7 @@ x  = tf.placeholder(tf.float32, [None, numFeature])
 W = tf.Variable(tf.zeros([numFeature,numClass]))
 b = tf.Variable(tf.zeros([numClass]))
 
-y = tf.nn.softmax( tf.matmul(x, W) + b )
+y = tf.nn.relu( tf.matmul(x, W) + b )
 
 y_ = tf.placeholder(tf.float32, [None, numClass])
 

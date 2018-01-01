@@ -5,7 +5,7 @@ import pandas as pd
 
 import json
 import copy
-from types import SimpleNamespace as Namespace
+# from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
 from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 
