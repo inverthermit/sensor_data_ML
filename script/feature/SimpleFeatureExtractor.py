@@ -3,17 +3,17 @@ import matplotlib.pyplot as plt
 import json
 import copy
 import os.path
-from types import SimpleNamespace as Namespace
+# from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
 class SimpleFeatureExtractor (FeatureExtractor):
 
     def getAccelerationFromFile(self,fileName):
-        print('Reading acceleration data from file: ',fileName)
+        # print('Reading acceleration data from file: ',fileName)
         file_directory = fileName
         json_data=open(file_directory).read()
         # print(json_data[:100])
         entity = json.loads(json_data, object_hook=lambda d: Namespace(**d))
-        print('Lines of data: ',len(entity.data))
+        # print('Lines of data: ',len(entity.data))
         # print(x.data[100].event.content)
         result = list()
         variable = 'acceleration' #quaternion acceleration
@@ -21,7 +21,7 @@ class SimpleFeatureExtractor (FeatureExtractor):
         #     print(x.data[index].event.variable == 'acceleration')
             if(entity.data[index].event.variable == 'acceleration'):#quaternion
                 result.append(entity.data[index].event.content)
-        print('File reading done. Total number of acceleration data: ',len(result))
+        # print('File reading done. Total number of acceleration data: ',len(result))
         return result
 
     def getLabeledData(self, data, label):

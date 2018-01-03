@@ -14,10 +14,12 @@ from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
 import pandas as pd
 
 classificationNum = 3
-path = '../../data/'
-dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
-labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-resultFileName = 'simpleFeatures012.npz'
+path = '../../data/AUSMELT-71/'
+dataFileNames = [#'Trial 2A 21.12.2017.json','Trial 2B 21.12.2017.json',
+ 'drain.json','Trial 2A 21.12.2017.json','Pin hole tip.json','Trial 3B 22.12.2017.json', 'Trial 3C 22.12.2017.json']
+labels = [#0, 1,
+            0,0,1,1,2] #['I-1', 'IV-2']
+resultFileName = 'simpleFeatures2a2b3a3b3c01021.npz' #'simpleFeatures2a2b01.npz'
 
 extractor = TimeSeriesFeatureExtractor()
 extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
@@ -36,7 +38,7 @@ train_no_nan = extractor.insertRollingFeatures(data, window = 350)
 print('****************Start to run classifications***************')
 rand_data = np.array(copy.deepcopy(train_no_nan))
 random.shuffle(rand_data)
-print(rand_data[0])
+print(rand_data[0].tolist())
 X_rand = rand_data[:,1:10]
 y_rand = rand_data[:,10]
 # print('888888888888', X_rand, '---------', y_rand)
@@ -58,18 +60,6 @@ for numTree in range(9,11):
     model = rf_model
     print('Random Forest(',numTree,'):')
 
-    # """Artificial Neural Network"""
-    # from sklearn.neural_network import MLPClassifier
-    # ann_model = MLPClassifier()
-    # model = ann_model
-    # print('ANN:')
-    #
-    # """SVM"""
-    # from sklearn.svm import SVC
-    # svm_model = SVC()
-    # model = svm_model
-    # print('SVM:')
-
     model.fit(x_train,y_train)
     print('Training score: ',model.score(x_train,y_train))
     print('Testing score: ', model.score(x_test,y_test))
@@ -79,7 +69,39 @@ for numTree in range(9,11):
     y_pred = model.predict(x_test)
     target_names = ['0', '1', '2']
     print(classification_report(y_true, y_pred, target_names=target_names))
-
+    #
+    # """Artificial Neural Network"""
+    # from sklearn.neural_network import MLPClassifier
+    # ann_model = MLPClassifier()
+    # model = ann_model
+    # print('ANN:')
+    #
+    # model.fit(x_train,y_train)
+    # print('Training score: ',model.score(x_train,y_train))
+    # print('Testing score: ', model.score(x_test,y_test))
+    #
+    # from sklearn.metrics import classification_report
+    # y_true = y_test
+    # y_pred = model.predict(x_test)
+    # target_names = ['0', '1', '2']
+    # print(classification_report(y_true, y_pred, target_names=target_names))
+    #
+    # """SVM"""
+    # from sklearn.svm import SVC
+    # svm_model = SVC()
+    # model = svm_model
+    # print('SVM:')
+    #
+    # model.fit(x_train,y_train)
+    # print('Training score: ',model.score(x_train,y_train))
+    # print('Testing score: ', model.score(x_test,y_test))
+    #
+    # from sklearn.metrics import classification_report
+    # y_true = y_test
+    # y_pred = model.predict(x_test)
+    # target_names = ['0', '1', '2']
+    # print(classification_report(y_true, y_pred, target_names=target_names))
+    #
 
 
 
