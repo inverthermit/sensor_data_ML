@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import json
 import os.path
 import sys
+from datetime import datetime
 sys.path.append('../')
 from types import SimpleNamespace as Namespace
 from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
@@ -19,6 +20,9 @@ def vector2onehot(num_classes, labels_dense):
     return np.eye(num_classes)[labels_dense]
 
 import pandas as pd
+
+"""Record the start time of the algorithm"""
+startTime = datetime.now()
 
 classificationNum = 3
 path = '../../data/AUSMELT-71/'
@@ -71,22 +75,66 @@ test_ys = vector2onehot(3, np.array(y_test).astype(int))
 
 numClass = 3
 numFeature = 9
+num_unit_layer_2 = 18
+num_unit_layer_3 = 12
 
-sess = tf.Session()
+# sess = tf.Session(config = tf.ConfigProto(log_device_placement=True))
 
-x  = tf.placeholder(tf.float32, [None, numFeature])
-W = tf.Variable(tf.zeros([numFeature,numClass]))
-b = tf.Variable(tf.zeros([numClass]))
+with tf.device('/gpu:0'):
 
-y = tf.nn.relu( tf.matmul(x, W) + b )
+    x  = tf.placeholder(tf.float32, [None, numFeature])
+    W = tf.Variable(tf.zeros([numFeature,num_unit_layer_2]))
+    b = tf.Variable(tf.zeros([num_unit_layer_2]))
 
-y_ = tf.placeholder(tf.float32, [None, numClass])
+    y2 = tf.nn.relu( tf.matmul(x, W) + b )
 
-cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_*tf.log(y), reduction_indices=[1]))
-train_step = tf.train.GradientDescentOptimizer(0.3).minimize(cross_entropy)
+    W2 = tf.Variable(tf.zeros([num_unit_layer_2,num_unit_layer_3]))
+    b2 = tf.Variable(tf.zeros([num_unit_layer_3]))
 
-sess = tf.InteractiveSession()
+    y3 = tf.nn.relu( tf.matmul(y2, W2) + b2 )
+
+    W3 = tf.Variable(tf.zeros([num_unit_layer_3,numClass]))
+    b3 = tf.Variable(tf.zeros([numClass]))
+
+    y = tf.nn.relu( tf.matmul(y3, W3) + b3 )
+
+    y_ = tf.placeholder(tf.float32, [None, numClass])
+
+    cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_*tf.log(y), reduction_indices=[1]))
+    train_step = tf.train.GradientDescentOptimizer(0.3).minimize(cross_entropy)
+
+
+
+
+#
+# x  = tf.placeholder(tf.float32, [None, numFeature])
+# W = tf.Variable(tf.zeros([numFeature,num_unit_layer_2]))
+# b = tf.Variable(tf.zeros([num_unit_layer_2]))
+#
+# y2 = tf.nn.relu( tf.matmul(x, W) + b )
+#
+# W2 = tf.Variable(tf.zeros([num_unit_layer_2,num_unit_layer_3]))
+# b2 = tf.Variable(tf.zeros([num_unit_layer_3]))
+#
+# y3 = tf.nn.relu( tf.matmul(y2, W2) + b2 )
+#
+# W3 = tf.Variable(tf.zeros([num_unit_layer_3,numClass]))
+# b3 = tf.Variable(tf.zeros([numClass]))
+#
+# y = tf.nn.relu( tf.matmul(y3, W3) + b3 )
+#
+# y_ = tf.placeholder(tf.float32, [None, numClass])
+#
+# cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_*tf.log(y), reduction_indices=[1]))
+# train_step = tf.train.GradientDescentOptimizer(0.3).minimize(cross_entropy)
+
+# sess = tf.InteractiveSession(config = tf.ConfigProto(log_device_placement=True))
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+sess = tf.InteractiveSession(config = config)
 tf.global_variables_initializer().run()
+
+
 
 for i in range(1000):
     if i%1000 == 0:
@@ -101,8 +149,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print('Training accuracy:' , sess.run(accuracy, {x: batch_xs, y_: batch_ys}))
 print('Testing accuracy:' , sess.run(accuracy, {x: test_xs, y_: test_ys}))
 
-
-
+endTime = datetime.now()
+print('Running Time:',str(endTime - startTime),' ',str(startTime), str(endTime))
 
 
 
