@@ -15,9 +15,10 @@ import pandas as pd
 
 classificationNum = 3
 path = '../../data/'
+tmpPath = '../tmp/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-resultFileName = 'simpleFeatures012.npz'
+resultFileName = tmpPath + 'simpleFeatures012.npz'
 
 extractor = TimeSeriesFeatureExtractor()
 extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
