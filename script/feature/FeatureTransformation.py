@@ -4,7 +4,7 @@ import math
 class FeatureTransformation():
 
     def scaleYZAxis(self, data):
-        
+
         print('The dimensions of the input data is: ', data.shape)
 
         factor = np.max(data[:,1:3])
@@ -18,10 +18,10 @@ class FeatureTransformation():
     def rotateYZAxis(self, data):
 
         print('The dimensions of the input data is: ', data.shape)
-        
+
         data_after_rotation = data
         angels = np.linspace(0, 2 * math.pi, 361)[1:-1]
-        
+
         for angel in angels:
             data_col_x = data[:,0]
             data_col_y = data[:,1]

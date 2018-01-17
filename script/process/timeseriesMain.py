@@ -7,6 +7,7 @@ import os.path
 import sys
 sys.path.append('../')
 from types import SimpleNamespace as Namespace
+from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
 
 # extractor = TimeSeriesFeatureExtractor()
@@ -15,16 +16,28 @@ import pandas as pd
 
 classificationNum = 3
 path = '../../data/'
-tmpPath = '../tmp/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-resultFileName = tmpPath + 'simpleFeatures012.npz'
-
 extractor = TimeSeriesFeatureExtractor()
-extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
+dfAll = None
+for index, dataFileName in enumerate(dataFileNames):
+    df = extractor.getSimpleFeaturedData(path + dataFileName, labels[index])
+    df = extractor.insertRollingFeatures(df, window = 350)
+    # print(len(df))
+    print(path + dataFileName, labels[index],len(df))
+    if dfAll is None:
+        dfAll = df
+        continue
+    else:
+        dfAll = dfAll.append(df)
 
-fileContent = np.load(path + resultFileName)
-data = fileContent['data']
+print(len(dfAll))
+
+dfAll = dfAll[['x', 'y', 'z',
+                'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z',
+                'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
+                'label']]
+data = dfAll.as_matrix()
 
 """['timeStamp',
     'x', 'y', 'z',
@@ -32,14 +45,13 @@ data = fileContent['data']
     'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
     'label']
 """
-train_no_nan = extractor.insertRollingFeatures(data, window = 350)
 
 print('****************Start to run classifications***************')
-rand_data = np.array(copy.deepcopy(train_no_nan))
+rand_data = np.array(copy.deepcopy(data))
 random.shuffle(rand_data)
 print(rand_data[0])
-X_rand = rand_data[:,1:10]
-y_rand = rand_data[:,10]
+X_rand = rand_data[:,:len(data[0])-1]
+y_rand = rand_data[:,len(data[0])-1]
 # print('888888888888', X_rand, '---------', y_rand)
 
 heldout_len = int(len(X_rand)*0.8)
