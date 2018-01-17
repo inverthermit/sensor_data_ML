@@ -13,20 +13,30 @@ classificationNum = 3
 path = '../../data/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-resultFileName = 'simpleFeatures01.npz'
 extractor = SimpleFeatureExtractor()
-extractor.saveSimpleFeaturedData(path, dataFileNames, labels, resultFileName)
+dfAll = None
+for index, dataFileName in enumerate(dataFileNames):
+    df = extractor.getSimpleFeaturedData(path + dataFileName, labels[index])
+    # print(len(df))
+    print(path + dataFileName, labels[index],len(df))
+    if dfAll is None:
+        dfAll = df
+        continue
+    else:
+        dfAll = dfAll.append(df)
 
+print(len(dfAll))
+
+dfAll = dfAll[['x', 'y', 'z', 'label']]
+data = dfAll.as_matrix()
+print(data)
 
 print('****************Start to run classifications***************')
-fileContent = np.load(path + resultFileName)
-data = fileContent['data']
-print(len(data))
 rand_data = copy.deepcopy(data)
 random.shuffle(rand_data)
 # extract a stack of 28x28 bitmaps
-X_rand = rand_data[:,:3]
-y_rand = rand_data[:,4]
+X_rand = rand_data[:,:len(data[0])-1]
+y_rand = rand_data[:,len(data[0])-1]
 
 # X_rand = digits[:, 0:784]
 # y_rand = digits[:, 784:785]

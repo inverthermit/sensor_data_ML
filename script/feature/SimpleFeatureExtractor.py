@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 import copy
 import os.path
+import pandas as pd
 from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
 class SimpleFeatureExtractor (FeatureExtractor):
@@ -42,3 +43,17 @@ class SimpleFeatureExtractor (FeatureExtractor):
             np.savez(path + resultFileName, data=allData)
         else:
             print('Feature file:\'',path + resultFileName,'\' already exists.')
+
+    def getSimpleFeaturedData(self, dataFilePath, label, returnDataFrame = True ):
+        allData = list()
+        fileArray = self.getAccelerationFromFile(dataFilePath)
+        labeledData = self.getLabeledData(fileArray, label)
+        allData.extend(labeledData)
+
+        if returnDataFrame:
+            data = np.array(allData)
+            df = pd.DataFrame({'timeStamp': data[:,3], 'x': data[:,0], 'y': data[:,1], 'z': data[:,2], 'label': data[:,4]})
+            df = df[['timeStamp','x', 'y', 'z', 'label']]
+            return df
+
+        return allData
