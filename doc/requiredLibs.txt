@@ -1,0 +1,8 @@
+pip install
+
+pip install numpy
+pip install matplotlib
+pip install tensorflow
+pip install pandas
+pip install sklearn
+pip install tensorflow-gpu
