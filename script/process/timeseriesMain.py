@@ -9,20 +9,22 @@ sys.path.append('../')
 from types import SimpleNamespace as Namespace
 from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
-
+from util.Util import Util
 # extractor = TimeSeriesFeatureExtractor()
 # extractor.getRollingMean([[1,2, 3, 4, 5, 6],[2,2, 3, 4, 5, 6]])
 import pandas as pd
 
 classificationNum = 3
-path = '../../data/'
-dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']
+rootDir = '../../'
+path = rootDir + Util.getConfig('trials_folder_path')
+tmpPath = rootDir + Util.getConfig('tmp_path')
+dataFileNames = ['0a.json','0b.json','0c.json']
 labels = [0, 1, 1] #['normal', 'hole', 'scallop']
-extractor = TimeSeriesFeatureExtractor()
+timeSeriesExtractor = TimeSeriesFeatureExtractor()
 dfAll = None
 for index, dataFileName in enumerate(dataFileNames):
-    df = extractor.getSimpleFeaturedData(path + dataFileName, labels[index])
-    df = extractor.insertRollingFeatures(df, window = 350)
+    df = timeSeriesExtractor.getSimpleFeaturedData(path + dataFileName, labels[index])
+    df = timeSeriesExtractor.insertRollingFeatures(df, window = 350)
     # print(len(df))
     print(path + dataFileName, labels[index],len(df))
     if dfAll is None:

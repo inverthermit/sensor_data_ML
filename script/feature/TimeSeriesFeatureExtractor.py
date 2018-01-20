@@ -12,7 +12,7 @@ from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 class TimeSeriesFeatureExtractor (SimpleFeatureExtractor):
 
 
-    def insertRollingFeatures(self, df, window):
+    def insertRollingFeatures(self, df, window, returnDataFrame = True):
         #[['timeStamp','x', 'y', 'z', 'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z','Rolling_Std_x','Rolling_Std_y','Rolling_Std_z', 'label']]
 
         #Calculate rolling mean and standard deviation using number of data set above
@@ -23,4 +23,7 @@ class TimeSeriesFeatureExtractor (SimpleFeatureExtractor):
         df['Rolling_Mean_z'] = df['z'].rolling(window).mean()
         df['Rolling_Std_z'] = df['z'].rolling(window).std()
         df = df.dropna(subset=['Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z'])
-        return df
+        if returnDataFrame:
+            return df
+        df = df[[['timeStamp','x', 'y', 'z', 'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z','Rolling_Std_x','Rolling_Std_y','Rolling_Std_z', 'label']]]
+        return df.as_matrix();

@@ -28,7 +28,7 @@ class ProcessFeatureExtractor (SimpleFeatureExtractor):
     """
 
     """Use JSON for this"""
-    def tagProcessData(self, dataframe, trailName, returnDataFrame = True):
+    def insertProcessData(self, dataframe, trailName, returnDataFrame = True):
         if '.json' in trailName:
             trailName = trailName.replace('.json','')
         rootDir = '../../'
