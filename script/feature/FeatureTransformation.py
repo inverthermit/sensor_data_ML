@@ -3,36 +3,29 @@ import math
 
 class FeatureTransformation():
 
-    def scaleYZAxis(self, data):
+    def scaleYZAxis(self, df):
 
-        print('The dimensions of the input data is: ', data.shape)
+        factor = df[['y', 'z']].max().max()
+        df[['y', 'z']] = df[['y', 'z']] / factor
 
-        factor = np.max(data[:,1:3])
-        YAndZ = data[:,1:3] / factor
-        newCoor = np.column_stack((data[:,0], YAndZ))
-        newData = np.column_stack((newCoor, data[:,3:]))
+        return df
 
-        print('The dimensions of the scaled data is: ', newData.shape)
-        return newData
+    def rotateYZAxis(self, df, returnList = True, rotationGranularity = 360):
 
-    def rotateYZAxis(self, data):
+        angles = np.linspace(0, 2 * math.pi, rotationGranularity + 1)[1:-1]
+        result = list()
 
-        print('The dimensions of the input data is: ', data.shape)
+        for angle in angles:
+            tmp = df
+            tmp['y'] = df['y'] * math.cos(angle) + df['z'] * math.sin(angle)
+            tmp['z'] = df['z'] * math.cos(angle) - df['y'] * math.sin(angle)
+            result.append(tmp)
 
-        data_after_rotation = data
-        angels = np.linspace(0, 2 * math.pi, 361)[1:-1]
+        if returnList == True:
+            return result
 
-        for angel in angels:
-            data_col_x = data[:,0]
-            data_col_y = data[:,1]
-            data_col_z = data[:,2]
-            data_rest = data[:,3:]
-            rotate_y = data_col_y * math.cos(angel) + data_col_z * math.sin(angel)
-            ratate_z = data_col_z * math.cos(angel) - data_col_y * math.sin(angel)
-            new_y_z = np.column_stack((rotate_y, ratate_z))
-            coor_after_rotation = np.column_stack((data_col_x, new_y_z))
-            rotated_data = np.column_stack((coor_after_rotation, data_rest))
-            data_after_rotation = np.vstack((data_after_rotation, rotated_data))
+        allData = result[0]
+        for item in result[1:]:
+            allData = allData.append(item)
 
-        print('The dimensions of the rotated data is: ', data_after_rotation.shape)
-        return data_after_rotation
+        return allData
