@@ -18,8 +18,8 @@ classificationNum = 3
 rootDir = '../../'
 path = rootDir + Util.getConfig('trials_folder_path')
 tmpPath = rootDir + Util.getConfig('tmp_path')
-dataFileNames = ['0a.json','0b.json','0c.json']
-labels = [0, 1, 1] #['normal', 'hole', 'scallop']
+dataFileNames = ['4a.json','4b.json','4c.json', '4d.json','4e.json','4f.json','4g.json','4h.json','4i.json']
+labels = [0, 1, 2,2,3,3,1,0,0] #['normal', 'hole', 'scallop']
 timeSeriesExtractor = TimeSeriesFeatureExtractor()
 dfAll = None
 for index, dataFileName in enumerate(dataFileNames):
@@ -92,7 +92,7 @@ for numTree in range(9,11):
     from sklearn.metrics import classification_report
     y_true = y_test
     y_pred = model.predict(x_test)
-    target_names = ['0', '1', '2']
+    target_names = ['0', '1', '2','3']
     print(classification_report(y_true, y_pred, target_names=target_names))
 
 
