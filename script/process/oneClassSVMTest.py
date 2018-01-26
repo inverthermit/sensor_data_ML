@@ -21,21 +21,23 @@ window_size = 350
 rootDir = '../../'
 path = rootDir + Util.getConfig('trials_folder_path')
 tmpPath = rootDir + Util.getConfig('tmp_path')
-dataFileNames = ['1a.json','0b.json']
-dataFileMinutes = np.array([[0,6],[None,None]])
-labels = [0,1] #['normal', 'hole', 'scallop']
+dataFileNames = ['1c.json','1d.json','3a.json','5a.json']
+dataFileMinutes = np.array([[None,None],[None,None],[None,None],[None,None]])
+labels = [1,1,1,1] #['normal', 'hole', 'scallop']
 
-testFileNames = ['0a.json']
-testFileMinutes = np.array([[0,4]])
-testFileLabels = [0]
+testFileNames = ['5h.json']
+testFileMinutes = np.array([[None,None]])
+testFileLabels = [-1]
 
 
 min_samples_leaf = 0.04
 is_heldout = False
 x_columns = [
-                'x','Rolling_Mean_x','Rolling_Std_x','Max_x','Min_x'
+                'x',
                 # 'y', 'z',
+                'Rolling_Mean_x',
                 # 'Rolling_Mean_y','Rolling_Mean_z',
+                'Rolling_Std_x'
                 # , 'Rolling_Std_y','Rolling_Std_z'
                 ]
 y_columns = ['label']
@@ -85,8 +87,8 @@ print(len(test_dfAll))
 dfAll = dfAll[x_columns + y_columns]
 data = dfAll.as_matrix()
 
-# class0 = np.array([row for row in data if row[3]==0])
-# class1 = np.array([row for row in data if row[3]==1])
+class0 = np.array([row for row in data if row[3]==0])
+class1 = np.array([row for row in data if row[3]==1])
 # plt.plot(class0[:,0],class0[:,2],'r.')
 # plt.plot(class1[:,0],class1[:,2],'b.')
 # plt.show()
@@ -144,7 +146,7 @@ for numTree in range(9,11):
     from sklearn.ensemble import RandomForestClassifier
     rf_model = RandomForestClassifier(n_estimators=numTree, min_samples_leaf  = min_samples_leaf, n_jobs =8)
     model = rf_model
-    print('Random Forest(',numTree,'):')
+    # print('Random Forest(',numTree,'):')
 
     # """Artificial Neural Network"""
     # from sklearn.neural_network import MLPClassifier
@@ -171,36 +173,14 @@ for numTree in range(9,11):
     # from sklearn.datasets import load_iris
     # from sklearn.ensemble import AdaBoostClassifier
 
-    model.fit(x_train,y_train)
 
-    # from sklearn.tree import export_graphviz
-    # export_graphviz(model.estimators_[0],
-    #                 feature_names=x_columns,
-    #                 filled=True,
-    #                 rounded=True)
-
-    # os.system('dot -Tpng tree.dot -o tree.png')
-
-
-    print('Training score: ',model.score(x_train,y_train))
-    print('Testing score: ', model.score(x_test,y_test))
-
-    from sklearn.metrics import classification_report
-    y_true = y_test
+    """One class SVM"""
+    from sklearn import svm
+    model = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+    model.fit(x_train)
     y_pred = model.predict(x_test)
-    target_names = ['0','1','2','3']
-    print(classification_report(y_true, y_pred, target_names=target_names))
-
-    from sklearn.model_selection import cross_val_predict
-    from sklearn.metrics import confusion_matrix
-    conf_mat = confusion_matrix(y_true,y_pred, labels = [0,1,2,3])
-    print(conf_mat)
-
-    if is_heldout:
-
-        y_pred = cross_val_predict(model,x_train,y_train,cv=10)
-        conf_mat = confusion_matrix(y_train,y_pred)
-        print(conf_mat)
+    print('total: ', len(y_pred))
+    print('accuracy: ', sum(y_pred)/len(y_pred))
 
 
 

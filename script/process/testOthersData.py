@@ -11,109 +11,62 @@ from feature.FeatureTransformation import FeatureTransformation
 from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
 from feature.TimeSeriesFeatureExtractor import TimeSeriesFeatureExtractor
 from util.Util import Util
-# extractor = TimeSeriesFeatureExtractor()
-# extractor.getRollingMean([[1,2, 3, 4, 5, 6],[2,2, 3, 4, 5, 6]])
 import pandas as pd
 
-classificationNum = 3
-
-window_size = 350
-rootDir = '../../'
-path = rootDir + Util.getConfig('trials_folder_path')
-tmpPath = rootDir + Util.getConfig('tmp_path')
-dataFileNames = ['1a.json','0b.json']
-dataFileMinutes = np.array([[0,6],[None,None]])
-labels = [0,1] #['normal', 'hole', 'scallop']
-
-testFileNames = ['0a.json']
-testFileMinutes = np.array([[0,4]])
-testFileLabels = [0]
-
-
-min_samples_leaf = 0.04
-is_heldout = False
-x_columns = [
-                'x','Rolling_Mean_x','Rolling_Std_x','Max_x','Min_x'
-                # 'y', 'z',
-                # 'Rolling_Mean_y','Rolling_Mean_z',
-                # , 'Rolling_Std_y','Rolling_Std_z'
-                ]
-y_columns = ['label']
-
-
-
-featureTransformer = FeatureTransformation()
-timeSeriesExtractor = TimeSeriesFeatureExtractor()
+# Test how our algorithm performs in others' data.
+rootDir = '../../data/AReM/'
+fileName1 = '/dataset'
+fileName2 = '.csv'
+folders = ['bending1','bending2','cycling','lying','sitting','standing','walking']
+is_heldout = True
+min_samples_leaf = 1
+# print(df)
 dfAll = None
-for index, dataFileName in enumerate(dataFileNames):
-    df = timeSeriesExtractor.getSimpleFeaturedData(path + dataFileName, labels[index]
-    ,startMin = dataFileMinutes[index,0],endMin = dataFileMinutes[index,1])
-    # print(len(df))
-    # df = featureTransformer.scaleYZAxis(df)
-    # print(len(df))
-    df = timeSeriesExtractor.insertRollingFeatures(df, window = window_size)
-    # print(len(df))
-    print(path + dataFileName, labels[index],len(df))
-    if dfAll is None:
-        dfAll = df
-        continue
-    else:
-        dfAll = dfAll.append(df)
-# dfAll.to_csv('./dataAll.csv', sep=',')
-print(len(dfAll))
+for index,folder in enumerate(folders):
+    for i in range(1,14):
+        filePath = rootDir + folder + fileName1 + str(i) + fileName2
+        import os.path
+        if not os.path.isfile(filePath):
+            continue
+        df = pd.read_csv(filePath, comment='#'
+        ,names = ['time','avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23'])
+        df['label'] = folder
+        print(filePath, folder, len(df))
+        if dfAll is None:
+            dfAll = df
+            continue
+        else:
+            dfAll = dfAll.append(df)
 
 
 """Test data"""
 test_dfAll = None
-for index, dataFileName in enumerate(testFileNames):
-    df = timeSeriesExtractor.getSimpleFeaturedData(path + dataFileName, testFileLabels[index]
-    ,startMin = testFileMinutes[index,0],endMin = testFileMinutes[index,1])
-    # df = featureTransformer.scaleYZAxis(df)
-    df = timeSeriesExtractor.insertRollingFeatures(df, window = window_size)
-    # print(len(df))
-    print(path + dataFileName, testFileLabels[index],len(df))
-    if test_dfAll is None:
-        test_dfAll = df
-        continue
-    else:
-        test_dfAll = test_dfAll.append(df)
+for index,folder in enumerate(folders):
+    for i in range(14,16):
+        filePath = rootDir + folder + fileName1 + str(i) + fileName2
+        import os.path
+        if not os.path.isfile(filePath):
+            continue
+        df = pd.read_csv(filePath, comment='#'
+        ,names = ['time','avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23'])
+        df['label'] = folder
+        print(filePath, folder, len(df))
+        if test_dfAll is None:
+            test_dfAll = df
+            continue
+        else:
+            test_dfAll = test_dfAll.append(df)
 
 print(len(test_dfAll))
 
 
-
-dfAll = dfAll[x_columns + y_columns]
+dfAll = dfAll.dropna(subset=['avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23','label'])
+dfAll = dfAll[['avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23','label']]
 data = dfAll.as_matrix()
 
-# class0 = np.array([row for row in data if row[3]==0])
-# class1 = np.array([row for row in data if row[3]==1])
-# plt.plot(class0[:,0],class0[:,2],'r.')
-# plt.plot(class1[:,0],class1[:,2],'b.')
-# plt.show()
-
-# from mpl_toolkits.mplot3d import Axes3D
-#
-#
-# fig = plt.figure()
-# ax = Axes3D(fig)
-#
-# ax.scatter(class0[:,0], class0[:,1], class0[:,2],'b.')
-# ax.scatter(class1[:,0], class1[:,1], class1[:,2],'r.')
-# plt.show()
-
-
-
-test_dfAll = test_dfAll[x_columns + y_columns]
+test_dfAll = test_dfAll.dropna(subset=['avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23','label'])
+test_dfAll = test_dfAll[['avg_rss12','var_rss12','avg_rss13','var_rss13','avg_rss23','var_rss23','label']]
 test_data = test_dfAll.as_matrix()
-
-
-"""['timeStamp',
-    'x', 'y', 'z',
-    'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z',
-    'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
-    'label']
-"""
-
 print('****************Start to run classifications***************')
 rand_data = np.array(copy.deepcopy(data))
 random.shuffle(rand_data)
@@ -188,12 +141,12 @@ for numTree in range(9,11):
     from sklearn.metrics import classification_report
     y_true = y_test
     y_pred = model.predict(x_test)
-    target_names = ['0','1','2','3']
+    target_names = folders
     print(classification_report(y_true, y_pred, target_names=target_names))
 
     from sklearn.model_selection import cross_val_predict
     from sklearn.metrics import confusion_matrix
-    conf_mat = confusion_matrix(y_true,y_pred, labels = [0,1,2,3])
+    conf_mat = confusion_matrix(y_true,y_pred, labels = folders)
     print(conf_mat)
 
     if is_heldout:
@@ -201,27 +154,3 @@ for numTree in range(9,11):
         y_pred = cross_val_predict(model,x_train,y_train,cv=10)
         conf_mat = confusion_matrix(y_train,y_pred)
         print(conf_mat)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-print('')
