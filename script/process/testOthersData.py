@@ -18,7 +18,7 @@ rootDir = '../../data/AReM/'
 fileName1 = '/dataset'
 fileName2 = '.csv'
 folders = ['bending1','bending2','cycling','lying','sitting','standing','walking']
-is_heldout = True
+is_heldout = False
 min_samples_leaf = 1
 # print(df)
 dfAll = None

@@ -89,9 +89,9 @@ data = dfAll.as_matrix()
 
 class0 = np.array([row for row in data if row[3]==0])
 class1 = np.array([row for row in data if row[3]==1])
-# plt.plot(class0[:,0],class0[:,2],'r.')
-# plt.plot(class1[:,0],class1[:,2],'b.')
-# plt.show()
+plt.plot(class0[:,0],class0[:,2],'r.')
+plt.plot(class1[:,0],class1[:,2],'b.')
+plt.show()
 
 # from mpl_toolkits.mplot3d import Axes3D
 #
@@ -103,105 +103,105 @@ class1 = np.array([row for row in data if row[3]==1])
 # ax.scatter(class1[:,0], class1[:,1], class1[:,2],'r.')
 # plt.show()
 
-
-
-test_dfAll = test_dfAll[x_columns + y_columns]
-test_data = test_dfAll.as_matrix()
-
-
-"""['timeStamp',
-    'x', 'y', 'z',
-    'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z',
-    'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
-    'label']
-"""
-
-print('****************Start to run classifications***************')
-rand_data = np.array(copy.deepcopy(data))
-random.shuffle(rand_data)
-print(rand_data[0])
-X_rand = rand_data[:,:len(data[0])-1]
-y_rand = rand_data[:,len(data[0])-1]
-# print('888888888888', X_rand, '---------', y_rand)
-
-heldout_len = int(len(X_rand)*0.8)
-x_train = X_rand[:heldout_len]
-y_train = y_rand[:heldout_len]
-x_test = []
-y_test = []
-if is_heldout:
-    x_test = X_rand[heldout_len:]
-    y_test = y_rand[heldout_len:]
-else:
-    x_test = test_data[:,:len(test_data[0])-1]
-    y_test = test_data[:,len(test_data[0])-1]
-
-# X = data[:,:3]
-# y = data[:,4]
-
-for numTree in range(9,11):
-    if(numTree%2 == 0):
-        continue
-    """Random Forest"""
-    from sklearn.ensemble import RandomForestClassifier
-    rf_model = RandomForestClassifier(n_estimators=numTree, min_samples_leaf  = min_samples_leaf, n_jobs =8)
-    model = rf_model
-    # print('Random Forest(',numTree,'):')
-
-    # """Artificial Neural Network"""
-    # from sklearn.neural_network import MLPClassifier
-    # ann_model = MLPClassifier()
-    # model = ann_model
-    # print('ANN:')
-    #
-    # """SVM"""
-    # from sklearn.svm import SVC
-    # svm_model = SVC()
-    # model = svm_model
-    # print('SVM:')
-
-    # """knn"""
-    # from sklearn.neighbors import KNeighborsClassifier
-    # model = KNeighborsClassifier(n_neighbors=numTree)
-    #
-    # """SGD"""
-    # from sklearn import linear_model
-    # model = linear_model.SGDClassifier(max_iter=1000,tol = 1000)
-
-    # """adaboost"""
-    # from sklearn.model_selection import cross_val_score
-    # from sklearn.datasets import load_iris
-    # from sklearn.ensemble import AdaBoostClassifier
-
-
-    """One class SVM"""
-    from sklearn import svm
-    model = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
-    model.fit(x_train)
-    y_pred = model.predict(x_test)
-    print('total: ', len(y_pred))
-    print('accuracy: ', sum(y_pred)/len(y_pred))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-print('')
+#
+#
+# test_dfAll = test_dfAll[x_columns + y_columns]
+# test_data = test_dfAll.as_matrix()
+#
+#
+# """['timeStamp',
+#     'x', 'y', 'z',
+#     'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z',
+#     'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
+#     'label']
+# """
+#
+# print('****************Start to run classifications***************')
+# rand_data = np.array(copy.deepcopy(data))
+# random.shuffle(rand_data)
+# print(rand_data[0])
+# X_rand = rand_data[:,:len(data[0])-1]
+# y_rand = rand_data[:,len(data[0])-1]
+# # print('888888888888', X_rand, '---------', y_rand)
+#
+# heldout_len = int(len(X_rand)*0.8)
+# x_train = X_rand[:heldout_len]
+# y_train = y_rand[:heldout_len]
+# x_test = []
+# y_test = []
+# if is_heldout:
+#     x_test = X_rand[heldout_len:]
+#     y_test = y_rand[heldout_len:]
+# else:
+#     x_test = test_data[:,:len(test_data[0])-1]
+#     y_test = test_data[:,len(test_data[0])-1]
+#
+# # X = data[:,:3]
+# # y = data[:,4]
+#
+# for numTree in range(9,11):
+#     if(numTree%2 == 0):
+#         continue
+#     """Random Forest"""
+#     from sklearn.ensemble import RandomForestClassifier
+#     rf_model = RandomForestClassifier(n_estimators=numTree, min_samples_leaf  = min_samples_leaf, n_jobs =8)
+#     model = rf_model
+#     # print('Random Forest(',numTree,'):')
+#
+#     # """Artificial Neural Network"""
+#     # from sklearn.neural_network import MLPClassifier
+#     # ann_model = MLPClassifier()
+#     # model = ann_model
+#     # print('ANN:')
+#     #
+#     # """SVM"""
+#     # from sklearn.svm import SVC
+#     # svm_model = SVC()
+#     # model = svm_model
+#     # print('SVM:')
+#
+#     # """knn"""
+#     # from sklearn.neighbors import KNeighborsClassifier
+#     # model = KNeighborsClassifier(n_neighbors=numTree)
+#     #
+#     # """SGD"""
+#     # from sklearn import linear_model
+#     # model = linear_model.SGDClassifier(max_iter=1000,tol = 1000)
+#
+#     # """adaboost"""
+#     # from sklearn.model_selection import cross_val_score
+#     # from sklearn.datasets import load_iris
+#     # from sklearn.ensemble import AdaBoostClassifier
+#
+#
+#     """One class SVM"""
+#     from sklearn import svm
+#     model = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+#     model.fit(x_train)
+#     y_pred = model.predict(x_test)
+#     print('total: ', len(y_pred))
+#     print('accuracy: ', sum(y_pred)/len(y_pred))
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# print('')
