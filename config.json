@@ -1,5 +1,7 @@
 {
     "trials_folder_path": "data/trials/",
     "tmp_path": "tmp/",
-    "trials_info_path": "data/trials/trialsInfo.json"
+    "trials_info_path": "data/trials/trialsInfo.json",
+    "pic_to_np_array": "nparray/"
+    
 }
