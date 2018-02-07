@@ -23,6 +23,7 @@ var/
 wheels/
 data/*
 tmp/*
+nparray/*
 *.egg-info/
 .installed.cfg
 *.egg
