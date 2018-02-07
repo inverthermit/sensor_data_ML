@@ -21,22 +21,24 @@ window_size = 350
 rootDir = '../../'
 path = rootDir + Util.getConfig('trials_folder_path')
 tmpPath = rootDir + Util.getConfig('tmp_path')
-dataFileNames = ['4a.json','4e.json','2a.json']
-dataFileMinutes = np.array([[None,None],[None,None],[None,None]])
-labels = [0,1,2] #['normal', 'hole', 'scallop']
+dataFileNames = ['1c.json','1d.json','3a.json','5a.json']
+dataFileMinutes = np.array([[None,None],[None,None],[None,None],[None,None]])
+labels = [1,1,1,1] #['normal', 'hole', 'scallop']
 
-testFileNames = ['0a.json']
-testFileMinutes = np.array([[0,4]])
-testFileLabels = [0]
+testFileNames = ['5h.json']
+testFileMinutes = np.array([[None,None]])
+testFileLabels = [-1]
 
 
 min_samples_leaf = 0.04
 is_heldout = False
 x_columns = [
-                'x','Rolling_Mean_x','Rolling_Std_x','Max_x','Min_x',
-                'y', 'z',
-                'Rolling_Mean_y','Rolling_Mean_z',
-                'Rolling_Std_y','Rolling_Std_z'
+                'x',
+                # 'y', 'z',
+                'Rolling_Mean_x',
+                # 'Rolling_Mean_y','Rolling_Mean_z',
+                'Rolling_Std_x'
+                # , 'Rolling_Std_y','Rolling_Std_z'
                 ]
 y_columns = ['label']
 
@@ -46,13 +48,10 @@ featureTransformer = FeatureTransformation()
 timeSeriesExtractor = TimeSeriesFeatureExtractor()
 dfAll = None
 for index, dataFileName in enumerate(dataFileNames):
-    print(dataFileName)
     df = timeSeriesExtractor.getSimpleFeaturedData(path + dataFileName, labels[index]
     ,startMin = dataFileMinutes[index,0],endMin = dataFileMinutes[index,1])
     # print(len(df))
-    # print(df)
-    df = featureTransformer.scaleYZAxis(df)
-    # print(df)
+    # df = featureTransformer.scaleYZAxis(df)
     # print(len(df))
     df = timeSeriesExtractor.insertRollingFeatures(df, window = window_size)
     # print(len(df))
@@ -88,35 +87,21 @@ print(len(test_dfAll))
 dfAll = dfAll[x_columns + y_columns]
 data = dfAll.as_matrix()
 
-print(dfAll)
-plotData = dfAll[['Rolling_Std_x', 'Rolling_Std_y', 'Rolling_Std_z','label']].as_matrix()
-# 'x','y','z'
-# 'Rolling_Mean_x','Rolling_Mean_y','Rolling_Mean_z'
-# 'Rolling_Std_x', 'Rolling_Std_y', 'Rolling_Std_z'
-class0 = np.array([row for row in plotData if row[len(row)-1]==0])
-class1 = np.array([row for row in plotData if row[len(row)-1]==1])
-class2 = np.array([row for row in plotData if row[len(row)-1]==2])
-# print(class0)
-# print(class1)
-# plt.plot(class0[:,1],class0[:,2],'r.')
-# plt.plot(class1[:,1],class1[:,2],'b.')
-# plt.show()
-
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.patches as mpatches
-
-
-fig = plt.figure()
-red_patch = mpatches.Patch(color='red', label='The red data')
-plt.legend(handles=[red_patch])
-ax = Axes3D(fig)
-start = 3000
-end = 3800
-# print(class0)
-ax.scatter(class0[start:end,0], class0[start:end,1], class0[start:end,2],'b.')
-ax.scatter(class1[start:end,0], class1[start:end,1], class1[start:end,2],'r.')
-ax.scatter(class2[start:end,0], class2[start:end,1], class2[start:end,2],'g.')
+class0 = np.array([row for row in data if row[3]==0])
+class1 = np.array([row for row in data if row[3]==1])
+plt.plot(class0[:,0],class0[:,2],'r.')
+plt.plot(class1[:,0],class1[:,2],'b.')
 plt.show()
+
+# from mpl_toolkits.mplot3d import Axes3D
+#
+#
+# fig = plt.figure()
+# ax = Axes3D(fig)
+#
+# ax.scatter(class0[:,0], class0[:,1], class0[:,2],'b.')
+# ax.scatter(class1[:,0], class1[:,1], class1[:,2],'r.')
+# plt.show()
 
 #
 #
@@ -161,7 +146,7 @@ plt.show()
 #     from sklearn.ensemble import RandomForestClassifier
 #     rf_model = RandomForestClassifier(n_estimators=numTree, min_samples_leaf  = min_samples_leaf, n_jobs =8)
 #     model = rf_model
-#     print('Random Forest(',numTree,'):')
+#     # print('Random Forest(',numTree,'):')
 #
 #     # """Artificial Neural Network"""
 #     # from sklearn.neural_network import MLPClassifier
@@ -188,36 +173,14 @@ plt.show()
 #     # from sklearn.datasets import load_iris
 #     # from sklearn.ensemble import AdaBoostClassifier
 #
-#     model.fit(x_train,y_train)
 #
-#     # from sklearn.tree import export_graphviz
-#     # export_graphviz(model.estimators_[0],
-#     #                 feature_names=x_columns,
-#     #                 filled=True,
-#     #                 rounded=True)
-#
-#     # os.system('dot -Tpng tree.dot -o tree.png')
-#
-#
-#     print('Training score: ',model.score(x_train,y_train))
-#     print('Testing score: ', model.score(x_test,y_test))
-#
-#     from sklearn.metrics import classification_report
-#     y_true = y_test
+#     """One class SVM"""
+#     from sklearn import svm
+#     model = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+#     model.fit(x_train)
 #     y_pred = model.predict(x_test)
-#     target_names = ['0','1','2','3']
-#     print(classification_report(y_true, y_pred, target_names=target_names))
-#
-#     from sklearn.model_selection import cross_val_predict
-#     from sklearn.metrics import confusion_matrix
-#     conf_mat = confusion_matrix(y_true,y_pred, labels = [0,1,2,3])
-#     print(conf_mat)
-#
-#     if is_heldout:
-#
-#         y_pred = cross_val_predict(model,x_train,y_train,cv=10)
-#         conf_mat = confusion_matrix(y_train,y_pred)
-#         print(conf_mat)
+#     print('total: ', len(y_pred))
+#     print('accuracy: ', sum(y_pred)/len(y_pred))
 #
 #
 #

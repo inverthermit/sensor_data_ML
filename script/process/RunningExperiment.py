@@ -116,7 +116,7 @@ class RunningExperiment():
                     'Rolling_Std_x','Rolling_Std_y','Rolling_Std_z',
                     'label']]
         else:
-            # Using simple features 
+            # Using simple features
             dfAll = None
             for df in train_data:
                 if dfAll is None:
@@ -173,4 +173,3 @@ class RunningExperiment():
         model = joblib.dump(model, modelName)
         model = joblib.load(modelName)
         print('Model ' + str(exp_num) + ' saved.')
-

@@ -76,7 +76,7 @@ class ProcessFeatureExtractor (SimpleFeatureExtractor):
                     break
             initial_lance_flow[index1:index2] = [trialInfoObj['Lance Flow After Change T1']]*(index2-index1)
             initial_lance_flow[index2:] = [trialInfoObj['Lance Flow After Change T2']]* (length - index2)
-            df['lance_flow'] = initial_lance_flow
+        df['lance_flow'] = initial_lance_flow
         # df1 = df[['ngimu_mount_type','ngimu_position', 'bath_start_depth',
         #         'immersion', 'lance_flow']]
         if returnDataFrame:

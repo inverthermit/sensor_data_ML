@@ -6,6 +6,7 @@ import os.path
 import pandas as pd
 from types import SimpleNamespace as Namespace
 from feature.FeatureExtractor import FeatureExtractor
+from util.TimeUtil import TimeUtil
 class SimpleFeatureExtractor (FeatureExtractor):
 
     def getAccelerationFromFile(self,fileName):
@@ -44,16 +45,31 @@ class SimpleFeatureExtractor (FeatureExtractor):
         else:
             print('Feature file:\'',path + resultFileName,'\' already exists.')
 
-    def getSimpleFeaturedData(self, dataFilePath, label, returnDataFrame = True ):
+    def getSimpleFeaturedData(self, dataFilePath, label, returnDataFrame = True , startMin = None, endMin = None):
         allData = list()
         fileArray = self.getAccelerationFromFile(dataFilePath)
         labeledData = self.getLabeledData(fileArray, label)
         allData.extend(labeledData)
+        data = np.array(allData)
+        df = pd.DataFrame({'timeStamp': data[:,3], 'x': data[:,0], 'y': data[:,1], 'z': data[:,2], 'label': data[:,4]})
+        df = df[['timeStamp','x', 'y', 'z', 'label']]
+
+        if not (startMin is None and endMin is None):
+            fileStartTimeStamp = df.iloc[0]['timeStamp']
+            fileEndTimeStamp = df.iloc[len(df)-1]['timeStamp']
+
+            startTimeStamp = fileStartTimeStamp
+            if not startMin is None:
+                startTimeStamp = fileStartTimeStamp + TimeUtil.getMillisecondFromMinute(
+                    minute= startMin )
+
+            if not endMin is None:
+                endTimeStamp = fileStartTimeStamp + TimeUtil.getMillisecondFromMinute(
+                    minute= endMin )
+            df = df[(df['timeStamp'] >= startTimeStamp) & (df['timeStamp'] <= endTimeStamp)]
+        df.sort_values('timeStamp')
 
         if returnDataFrame:
-            data = np.array(allData)
-            df = pd.DataFrame({'timeStamp': data[:,3], 'x': data[:,0], 'y': data[:,1], 'z': data[:,2], 'label': data[:,4]})
-            df = df[['timeStamp','x', 'y', 'z', 'label']]
             return df
 
         return allData
