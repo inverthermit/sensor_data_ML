@@ -8,7 +8,7 @@ import sys
 sys.path.append('../')
 from types import SimpleNamespace as Namespace
 from feature.SimpleFeatureExtractor import SimpleFeatureExtractor
-
+from util.Util import Util
 classificationNum = 3
 path = '../../data/'
 dataFileNames = ['drain.json','Pin hole tip.json','Scallop tip.json']

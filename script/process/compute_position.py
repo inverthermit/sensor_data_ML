@@ -39,32 +39,32 @@ test_file_names = None
 labels = None
 
 
-train_file_names = ['1a.json', '1b.json', '1c.json', '1d.json', '1e.json', 
-					'2a.json', '2b.json', '3a.json', '3b.json', '3c.json', 
-					'3d.json', '3e.json', '3f.json', '3g.json', '4a.json', 
-					'4b.json', '4c.json', '4d.json', '4e.json', '4f.json', 
+train_file_names = ['1a.json', '1b.json', '1c.json', '1d.json', '1e.json',
+					'2a.json', '2b.json', '3a.json', '3b.json', '3c.json',
+					'3d.json', '3e.json', '3f.json', '3g.json', '4a.json',
+					'4b.json', '4c.json', '4d.json', '4e.json', '4f.json',
 					'4g.json', '4h.json']
 labels = {'1a.json':0,
-		  '1b.json':0, 
-		  '1c.json':0, 
-		  '1d.json':0, 
-		  '1e.json':0, 
-		  '2a.json':0, 
-		  '2b.json':1, 
-		  '3a.json':0, 
-		  '3b.json':1, 
-		  '3c.json':1, 
-		  '3d.json':1, 
-		  '3e.json':1, 
-		  '3f.json':1, 
-		  '3g.json':1, 
-		  '4a.json':0, 
-		  '4b.json':1, 
-		  '4c.json':1, 
-		  '4d.json':1, 
-		  '4e.json':1, 
-		  '4f.json':1, 
-		  '4g.json':1, 
+		  '1b.json':0,
+		  '1c.json':0,
+		  '1d.json':0,
+		  '1e.json':0,
+		  '2a.json':0,
+		  '2b.json':1,
+		  '3a.json':0,
+		  '3b.json':1,
+		  '3c.json':1,
+		  '3d.json':1,
+		  '3e.json':1,
+		  '3f.json':1,
+		  '3g.json':1,
+		  '4a.json':0,
+		  '4b.json':1,
+		  '4c.json':1,
+		  '4d.json':1,
+		  '4e.json':1,
+		  '4f.json':1,
+		  '4g.json':1,
 		  '4h.json':0}
 
 
@@ -100,8 +100,8 @@ for index, train_file_name in enumerate(train_file_names):
 # for index in [5]:
 	current_data = train_data[index][[
 		'w',
-		'x', 
-		'y', 
+		'x',
+		'y',
 		'z',
 		'label'
 		]]
@@ -124,7 +124,7 @@ for index, train_file_name in enumerate(train_file_names):
 	orientation.append(2 * (qxz + qwy))
 	# orientation.append(2 * (qyz - qwx))
 	# orientation.append(2 * (qww - 0.5 + current_data['z'] * current_data['z']))
-	
+
 	start = 15000
 	end = 15020
 	coordinate = pd.DataFrame({'x':-1 * orientation[0].as_matrix(), 'y':-1 * orientation[1].as_matrix(), 'z':-1 * orientation[2].as_matrix()})#[start:end] #slicing
