@@ -73,3 +73,28 @@ class SimpleFeatureExtractor (FeatureExtractor):
             return df
 
         return allData
+
+    def getQuaternionFromFile(self,fileName):
+        file_directory = fileName
+        json_data=open(file_directory).read()
+        entity = json.loads(json_data, object_hook=lambda d: Namespace(**d))
+        result = list()
+        variable = 'quaternion' #quaternion acceleration
+        for index in range(len(entity.data)):
+            if(entity.data[index].event.variable == 'quaternion'):#quaternion
+                result.append(entity.data[index].event.content)
+        return result
+
+    def getQuaternionData(self, dataFilePath, label, returnDataFrame = True):
+        allData = list()
+        fileArray = self.getQuaternionFromFile(dataFilePath)
+        labeledData = self.getLabeledData(fileArray, label)
+        allData.extend(labeledData)
+
+        if returnDataFrame:
+            data = np.array(allData)
+            df = pd.DataFrame({'w': data[:,0], 'x': data[:,1], 'y': data[:,2], 'z': data[:,3], 'label': data[:,4]})
+            df = df[['w','x','y','z','label']]
+            return df
+
+        return allData

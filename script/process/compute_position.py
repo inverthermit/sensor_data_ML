@@ -166,14 +166,14 @@ for index, train_file_name in enumerate(train_file_names):
 
 
 
-	for index in range(len(coordinate) / img_interval):
+	for index in range(int(len(coordinate) / img_interval)):
 
 		y = coordinate['y'][index * img_interval : index * img_interval + img_interval].as_matrix()
 		z = coordinate['z'][index * img_interval : index * img_interval + img_interval].as_matrix()
 
 		plt.plot(y, z)
 		plt.axis('off')
-		plt.savefig(tmpPath + train_file_name + str(index) + '.png', dpi = 100)
+		plt.savefig(tmpPath + train_file_name + str(index) + '.png', dpi = 10)
 		plt.clf()
 
 # for image_path in glob.glob(tmpPath + '*.png'):

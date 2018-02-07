@@ -51,5 +51,5 @@ for fileName in fileNames:
 		print(counter)
 
 for key in all_np_array:
-	print(all_np_array.shape[key])
+	print(all_np_array[key].shape)
 	np.savez(savePath + key + '.npz', data = all_np_array[key])

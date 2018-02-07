@@ -38,26 +38,26 @@ width = 80
 height = 60
 
 labels = {'1a.json':0,
-	  '1b.json':0, 
-	  '1c.json':0, 
-	  '1d.json':0, 
-	  '1e.json':0, 
-	  '2a.json':0, 
-	  '2b.json':1, 
-	  '3a.json':0, 
-	  '3b.json':1, 
-	  '3c.json':1, 
-	  '3d.json':1, 
-	  '3e.json':1, 
-	  '3f.json':1, 
-	  '3g.json':1, 
-	  '4a.json':0, 
-	  '4b.json':1, 
-	  '4c.json':1, 
-	  '4d.json':1, 
-	  '4e.json':1, 
-	  '4f.json':1, 
-	  '4g.json':1, 
+	  '1b.json':0,
+	  '1c.json':0,
+	  '1d.json':0,
+	  '1e.json':0,
+	  '2a.json':0,
+	  '2b.json':1,
+	  '3a.json':0,
+	  '3b.json':1,
+	  '3c.json':1,
+	  '3d.json':1,
+	  '3e.json':1,
+	  '3f.json':1,
+	  '3g.json':1,
+	  '4a.json':0,
+	  '4b.json':1,
+	  '4c.json':1,
+	  '4d.json':1,
+	  '4e.json':1,
+	  '4f.json':1,
+	  '4g.json':1,
 	  '4h.json':0}
 
 fileNames = [f for f in listdir(savePath) if isfile(join(savePath, f))]
@@ -101,6 +101,7 @@ for file_name in test_file_names:
         label = np.array(([1,0]))
     else:
         label = np.array(([0,1]))
+
     for index in range(train_data['data'].shape[0]):
             if index == 0:
                     train_label = label
@@ -142,7 +143,7 @@ valY = np.array([i[1] for i in corrLabel_test]).reshape(-1, 2)
 
 print(trainX.shape, valX.shape, trainY.shape, valY.shape)
 
-input_shape = (img_width, img_height, 5)
+input_shape = (img_width, img_height, 1)
 
 model = Sequential()
 
