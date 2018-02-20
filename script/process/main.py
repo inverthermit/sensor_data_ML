@@ -36,7 +36,7 @@ print(data)
 
 print('****************Start to run classifications***************')
 rand_data = copy.deepcopy(data)
-random.shuffle(rand_data)
+np.random.shuffle(rand_data)
 # extract a stack of 28x28 bitmaps
 X_rand = rand_data[:,:len(data[0])-1]
 y_rand = rand_data[:,len(data[0])-1]
@@ -81,3 +81,8 @@ for numTree in range(1,11):
     y_pred = model.predict(x_test)
     target_names = ['0', '1']
     print(classification_report(y_true, y_pred, target_names=target_names))
+
+
+    # from sklearn.model_selection import cross_val_score
+    # cross_val_score = cross_val_score(model, x_train, y_train, cv=10)
+    # print(cross_val_score)
