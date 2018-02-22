@@ -16,38 +16,52 @@ import pandas as pd
 
 sys.path.append('../')
 rootDir = '../../'
-path = rootDir + 'data/'
-
-data = pd.read_csv(path + 'clustering_features_all.csv')
+path = rootDir + 'tmp/cluster_result_csv/labeled_csv/'
+n_clusters = 10
+data = pd.read_csv(path + 'clustering_features_all'+str(n_clusters)+'.csv')
 print(data)
-
-data['sum'] = data['cluster0']+data['cluster1']+data['cluster2']+data['cluster3']+data['cluster4']
-data['percentage0'] = data['cluster0']*100/data['sum']
-data['percentage1'] = data['cluster1']*100/data['sum']
-data['percentage2'] = data['cluster2']*100/data['sum']
-data['percentage3'] = data['cluster3']*100/data['sum']
-data['percentage4'] = data['cluster4']*100/data['sum']
-
+data['sum'] =data['cluster'+str(0)]
+for i in range(1, n_clusters):
+    data['sum'] += data['cluster'+str(i)]
 # print(data)
+train_data_title = []
+for i in range(n_clusters):
+    data['percentage'+str(i)] = data['cluster'+str(i)]*100/data['sum']
+    train_data_title.append('percentage'+str(i))
+train_data_title.append('label')
 
-train_data = data[['percentage0','percentage1','percentage2','percentage3','percentage4','label']].as_matrix()
+train_data = data[train_data_title].as_matrix()
 # print(len(train_data))
 # print(train_data)
 np.random.shuffle(train_data)
 # print(len(train_data))
-print(train_data)
+# print(train_data)
 
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 import graphviz
-clf = DecisionTreeClassifier(random_state=0)
+# clf = DecisionTreeClassifier(random_state=0)
+# from sklearn.ensemble import RandomForestClassifier
+# clf = RandomForestClassifier(n_estimators=3)
+from sklearn.neural_network import MLPClassifier
+clf = MLPClassifier(max_iter = 1000)
 X = train_data[:,:len(train_data[0])-1]
 y = train_data[:,len(train_data[0])-1]
 # print(X,y)
 cross_val_score = cross_val_score(clf, X, y, cv=10)
 print(cross_val_score)
 print(np.mean(cross_val_score))
+
+# from sklearn.model_selection import cross_val_predict
+# from sklearn.metrics import confusion_matrix
+# y_pred = cross_val_predict(clf,X,y,cv=10)
+# conf_mat = confusion_matrix(y,y_pred)
+# print(conf_mat)
+#
+# from sklearn.metrics import classification_report
+# target_names = ['0', '1']
+# print(classification_report(y,y_pred, target_names=target_names))
 # print(cross_val_score(clf, X, y, cv=10))
-clf.fit(X,y)
-dot_data = tree.export_graphviz(clf, out_file='D:/graphviz-2.38/release/bin/data/decision_tree.dot')
+# clf.fit(X,y)
+# dot_data = tree.export_graphviz(clf, out_file='D:/graphviz-2.38/release/bin/data/decision_tree.dot')

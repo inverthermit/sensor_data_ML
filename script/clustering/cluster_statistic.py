@@ -13,15 +13,18 @@ import os.path
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import json
+import pandas as pd
 
 from util.Util import Util
 
 sys.path.append('../')
-classificationNum = 3
+n_clusters = 5
 rootDir = '../../'
 path = rootDir + Util.getConfig('trials_folder_path')
-tmpPath = rootDir + Util.getConfig('tmp_path') +'/all/'#big
-savePath = rootDir + Util.getConfig('pic_to_np_array') +'/all/'#big
+tmpPath = rootDir + Util.getConfig('tmp_path') +'/all/'#big all
+savePath = rootDir + Util.getConfig('pic_to_np_array') +'/all/'#big all
+npzPath = rootDir + Util.getConfig('tmp_path') + 'filename_cluster_npz/kmeansAll'+str(n_clusters)+'.npz'
+csvPath = rootDir + Util.getConfig('tmp_path') + 'cluster_result_csv/'
 width = 80
 height = 60
 
@@ -46,7 +49,7 @@ def genClusterResult():
 
     startTime = datetime.now()
     from sklearn.cluster import KMeans
-    kmeans = KMeans(n_clusters=5, random_state=0).fit(X)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(X)
     print(kmeans.labels_)
     # print(kmeans.predict([[0, 0], [4, 4]]))
     print(kmeans.cluster_centers_)
@@ -57,12 +60,12 @@ def genClusterResult():
 
     picFileNames = np.array([f for f in listdir(tmpPath) if isfile(join(tmpPath, f))])
     result = np.transpose(np.vstack((picFileNames,kmeans.labels_)))
-    np.savez(savePath + 'kmeans7kAll.npz', data = result)
+    np.savez(npzPath, data = result)
 
 
 genClusterResult()
 print('genclusterresult done.')
-filename_cluster = np.load(savePath + 'kmeans7kAll.npz')['data']
+filename_cluster = np.load(npzPath)['data']
 # print(filename_cluster)
 
 raw_data_filenames = np.array([])
@@ -73,7 +76,8 @@ result = np.transpose(np.vstack((raw_data_filenames, filename_cluster[:,1])))
 
 """Do the counting"""
 unique_files = np.unique(result[:,0])
-unique_clusters = np.unique(result[:,1])
+unique_clusters = [str(i) for i in range(n_clusters)]
+print('unique clusters;',unique_clusters)
 print(unique_files)
 
 data = {}
@@ -81,34 +85,55 @@ for key in unique_files:
     key_row = [row[1] for row in result if row[0]==key]
     unique, counts = np.unique(key_row, return_counts=True)
     counts_sum = sum(counts)
-    # dict(zip(unique, counts))
     value = dict(zip(unique, counts))#np.round_(counts/counts_sum*1.0, 2)
     data[key] = value
-# print(json.dumps(data))
-# print(data)
+
+count_arr = []
 
 for key in data:
-    # print(key+':')
     row = key
+    arr_row = [key]
     file_content = data[key]
-    clusters = ['0','1','2','3','4']
-    for cluster in clusters:
+    for cluster in unique_clusters:
         if cluster not in file_content:
             row += ' 0'
+            arr_row.append('0')
             continue
         row += ' '+str(file_content[cluster])
-    print(row)
+        arr_row.append(str(file_content[cluster]))
+    count_arr.append(arr_row)
+
+df_sum_title = ['sum']
+# unique_clusters = [str(i) for i in range(5)]
+df_start_title = ['trail' ]
+df_cluster_title = [('cluster'+ ele) for ele in unique_clusters]
+
+df_title = df_start_title
+df_title.extend(df_cluster_title)
+
+df = pd.DataFrame(count_arr,columns=df_title)
+print(df)
+df.to_csv(csvPath+'n_cluster'+str(n_clusters)+'.csv', sep=',', encoding='utf-8',index=False)
+
+# df_title
+#
+# df_percentage_title = [('percent'+ ele) for ele in unique_clusters]
 
 
+# if '.json' in trailName:
+#     trailName = trailName.replace('.json','')
+# rootDir = '../../'
+# with open(rootDir + Util.getConfig('trials_info_path')) as json_data_file:
+#     data = json.load(json_data_file)
+# trialInfoObj = None
+# for ele in data:
+#     if ele['Trial'] == trailName:
+#         trialInfoObj = ele
+#         break
 
-# unique, counts = numpy.unique(a, return_counts=True)
-# dict(zip(unique, counts))
+# df['purchase'].astype(str).astype(int)
 
-# print(result)
 
-# a = numpy.array([0, 3, 0, 1, 0, 1, 2, 1, 0, 0, 0, 0, 1, 3, 4])
-# >>> unique, counts = numpy.unique(a, return_counts=True)
-# >>> dict(zip(unique, counts))
 
 
 
