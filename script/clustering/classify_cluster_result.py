@@ -38,9 +38,9 @@ np.random.shuffle(train_data)
 # print(train_data)
 
 from sklearn.model_selection import cross_val_score
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-import graphviz
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn import tree
+# import graphviz
 # clf = DecisionTreeClassifier(random_state=0)
 # from sklearn.ensemble import RandomForestClassifier
 # clf = RandomForestClassifier(n_estimators=3)
