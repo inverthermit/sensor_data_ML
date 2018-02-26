@@ -38,27 +38,6 @@ featureTransformer = FeatureTransformation()
 
 
 savePath = rootDir+'real_data/chunked/'
-originDataPath = rootDir + 'real_data/quaternion.csv'
-
-# originData = pd.read_csv(originDataPath)
-# y_range = 0
-# z_range = 0
-#
-# for index in range(int(len(originData) / img_interval)):
-# 	y = originData['Y'][index * img_interval : index * img_interval + img_interval].as_matrix()
-# 	z = originData['Z'][index * img_interval : index * img_interval + img_interval].as_matrix()
-# 	y_range_this_iter = y.max().max() - y.min().min()
-# 	z_range_this_iter = y.max().max() - y.min().min()
-#
-# 	if y_range < y_range_this_iter:
-# 		y_range = y_range_this_iter
-# 	if z_range < z_range_this_iter:
-# 		z_range = z_range_this_iter
-#
-# y_range /= 100
-# z_range /= 100
-
-# print('y range is ' + str(y_range) + ', z range is ' + str(z_range))
 
 train_file_names = [f for f in listdir(savePath) if isfile(join(savePath, f))]
 
