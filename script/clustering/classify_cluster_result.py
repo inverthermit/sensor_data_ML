@@ -18,7 +18,7 @@ sys.path.append('../')
 rootDir = '../../'
 path = rootDir + 'tmp/cluster_result_csv/labeled_csv/'
 n_clusters = 10
-data = pd.read_csv(path + 'clustering_features_all'+str(n_clusters)+'.csv')
+data = pd.read_csv(path + 'kcm_clustering_features_all'+str(n_clusters)+'.csv')
 print(data)
 data['sum'] =data['cluster'+str(0)]
 for i in range(1, n_clusters):
@@ -29,8 +29,9 @@ for i in range(n_clusters):
     data['percentage'+str(i)] = data['cluster'+str(i)]*100/data['sum']
     train_data_title.append('percentage'+str(i))
 train_data_title.append('label')
-
+print(data[train_data_title])
 train_data = data[train_data_title].as_matrix()
+
 # print(len(train_data))
 # print(train_data)
 np.random.shuffle(train_data)

@@ -18,12 +18,12 @@ import pandas as pd
 from util.Util import Util
 
 sys.path.append('../')
-n_clusters = 5
+n_clusters = 10
 rootDir = '../../'
 path = rootDir + Util.getConfig('trials_folder_path')
-tmpPath = rootDir + Util.getConfig('tmp_path') +'/all/'#big all
-savePath = rootDir + Util.getConfig('pic_to_np_array') +'/all/'#big all
-npzPath = rootDir + Util.getConfig('tmp_path') + 'filename_cluster_npz/kmeansAll'+str(n_clusters)+'.npz'
+tmpPath = rootDir + Util.getConfig('tmp_path') +'/kcm/'#big all
+savePath = rootDir + Util.getConfig('pic_to_np_array') +'/kcm/'#big all
+npzPath = rootDir + Util.getConfig('tmp_path') + 'filename_cluster_npz/kcm_kmeansAll'+str(n_clusters)+'.npz'
 csvPath = rootDir + Util.getConfig('tmp_path') + 'cluster_result_csv/'
 width = 80
 height = 60
@@ -66,11 +66,11 @@ def genClusterResult():
 genClusterResult()
 print('genclusterresult done.')
 filename_cluster = np.load(npzPath)['data']
-# print(filename_cluster)
+print(filename_cluster)
 
 raw_data_filenames = np.array([])
 for name in filename_cluster[:,0]:
-    raw_data_filenames = np.append(raw_data_filenames, [name[:2]])
+    raw_data_filenames = np.append(raw_data_filenames, [name.split('.json')[0]])
 
 result = np.transpose(np.vstack((raw_data_filenames, filename_cluster[:,1])))
 
@@ -113,7 +113,7 @@ df_title.extend(df_cluster_title)
 
 df = pd.DataFrame(count_arr,columns=df_title)
 print(df)
-df.to_csv(csvPath+'n_cluster'+str(n_clusters)+'.csv', sep=',', encoding='utf-8',index=False)
+df.to_csv(csvPath+'kcm_n_cluster'+str(n_clusters)+'.csv', sep=',', encoding='utf-8',index=False)
 
 # df_title
 #
