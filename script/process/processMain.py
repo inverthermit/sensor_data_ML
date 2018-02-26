@@ -74,19 +74,19 @@ labels = [0,1]
 # ]
 
 """All A mount_type"""
-# dataFileNames = ['0a.json','1a.json','1b.json','2a.json','4a.json','4h.json',
-# '4e.json','4f.json','0b.json','0c.json','4b.json','4g.json','2b.json','4c.json','4d.json']
-# labels = [0,0,0,0,0,0,
-# 1,1,1,1,1,1,1,1,1]
+dataFileNames = ['0a.json','1a.json','1b.json','2a.json','4a.json','4h.json',
+'4e.json','4f.json','0b.json','0c.json','4b.json','4g.json','2b.json','4c.json','4d.json']
+labels = [0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1]
 
-# dataFileNames = ['0a.json','1a.json','1b.json','2a.json','4a.json',#'4h.json',
-# '4e.json','4f.json','0b.json','0c.json','4b.json','4g.json','2b.json','4c.json',#'4d.json'
-# ]
-# labels = [0,0,0,0,0,0,
-# 1,1,1,1,1,1,1,1,1]
+dataFileNames = ['0a.json','1a.json','1b.json','2a.json','4a.json',#'4h.json',
+'4e.json','4f.json','0b.json','0c.json','4b.json','4g.json','2b.json','4c.json',#'4d.json'
+]
+labels = [0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1]
 
-# testFileNames = ['4h.json','4d.json']
-# testFileLabels = [0,1]
+testFileNames = ['4h.json','4d.json']
+testFileLabels = [0,1]
 
 is_heldout = False
 featureTransformer = FeatureTransformation()
@@ -155,7 +155,7 @@ test_data = test_dfAll.as_matrix()
 
 print('****************Start to run classifications***************')
 rand_data = np.array(copy.deepcopy(data))
-random.shuffle(rand_data)
+np.random.shuffle(rand_data)
 print(rand_data[0])
 X_rand = rand_data[:,:len(data[0])-1]
 y_rand = rand_data[:,len(data[0])-1]

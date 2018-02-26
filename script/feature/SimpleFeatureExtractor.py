@@ -93,8 +93,8 @@ class SimpleFeatureExtractor (FeatureExtractor):
 
         if returnDataFrame:
             data = np.array(allData)
-            df = pd.DataFrame({'w': data[:,0], 'x': data[:,1], 'y': data[:,2], 'z': data[:,3], 'label': data[:,4]})
-            df = df[['w','x','y','z','label']]
+            df = pd.DataFrame({'w': data[:,0], 'x': data[:,1], 'y': data[:,2], 'z': data[:,3], 'timeStamp': data[:,4], 'label': data[:,len(data[0])-1]})
+            df = df[['w','x','y','z','timeStamp','label']]
             return df
 
         return allData
