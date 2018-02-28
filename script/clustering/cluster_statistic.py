@@ -18,13 +18,13 @@ import pandas as pd
 from util.Util import Util
 
 sys.path.append('../')
-n_clusters = 10
 rootDir = '../../'
+n_clusters = Util.getConfig('number_of_clusters')
 path = rootDir + Util.getConfig('trials_folder_path')
-tmpPath = rootDir + Util.getConfig('tmp_path') +'/kcm/'#big all
-savePath = rootDir + Util.getConfig('pic_to_np_array') +'/kcm/'#big all
-npzPath = rootDir + Util.getConfig('tmp_path') + 'filename_cluster_npz/kcm_kmeansAll'+str(n_clusters)+'.npz'
-csvPath = rootDir + Util.getConfig('tmp_path') + 'cluster_result_csv/'
+tmpPath = rootDir + Util.getConfig('image_save_folder')
+savePath = rootDir + Util.getConfig('pic_to_np_array')
+npzPath = rootDir + Util.getConfig('image_filename_belong_cluster_npz')
+csvPath = rootDir + Util.getConfig('clustering_result_csv_folder')
 width = 80
 height = 60
 

@@ -26,10 +26,10 @@ from os.path import isfile, join
 from os import listdir
 
 
-img_interval = 500
 sys.path.append('../')
 classificationNum = 3
 rootDir = '../../'
+img_interval = Util.getConfig('data_points_per_image')
 path = rootDir + Util.getConfig('trials_folder_path')
 tmpPath = rootDir + Util.getConfig('tmp_path')
 
@@ -37,8 +37,8 @@ extractor = TimeSeriesFeatureExtractor()
 featureTransformer = FeatureTransformation()
 
 
-savePath = rootDir+'real_data/chunked/'
-
+savePath = rootDir + Util.getConfig('path_chunked_json_folder')
+image_save_path = rootDir + Util.getConfig('image_save_folder')
 train_file_names = [f for f in listdir(savePath) if isfile(join(savePath, f))]
 
 
@@ -92,8 +92,8 @@ for index, train_file_name in enumerate(train_file_names):
 		if z_range < z_r:
 			z_range = z_r
 
-y_range /=100
-z_range /=100
+y_range /=Util.getConfig('zoom_factor')
+z_range /=Util.getConfig('zoom_factor')
 
 print('y range is ' + str(y_range) + ', z range is ' + str(z_range))
 
@@ -133,15 +133,15 @@ for index, train_file_name in enumerate(train_file_names):
 		y = coordinate['y'][index * img_interval : index * img_interval + img_interval].as_matrix() - coordinate['y'][index * img_interval : index * img_interval + img_interval].mean()
 		z = coordinate['z'][index * img_interval : index * img_interval + img_interval].as_matrix() - coordinate['z'][index * img_interval : index * img_interval + img_interval].mean()
 
-		y_r = y.max().max() - y.min().min()
-		z_r = z.max().max() - z.min().min()
-		print('y range is ' + str(y_r) + ', z range is ' + str(z_r))
+		#y_r = y.max().max() - y.min().min()
+		#z_r = z.max().max() - z.min().min()
+		#print('y range is ' + str(y_r) + ', z range is ' + str(z_r))
 
 
 		plt.xlim(- y_range / 2, y_range / 2)
 		plt.ylim(- z_range / 2, z_range / 2)
 		plt.plot(y, z)
 		plt.axis('off')
-		plt.savefig(tmpPath+'real_data_pic/' + train_file_name + str(index) + '.png', dpi = 10)
+		plt.savefig( image_save_path + train_file_name + str(index) + '.png', dpi = 10)
 		# plt.show()
 		plt.clf()

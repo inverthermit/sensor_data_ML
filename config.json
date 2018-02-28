@@ -2,13 +2,19 @@
     "trials_folder_path": "data/trials/",
     "tmp_path": "tmp/",
     "trials_info_path": "data/trials/trialsInfo.json",
-    "pic_to_np_array": "nparray/",
+    
     "data_path": "data/",
-
-
-    "clustering": {
-        "input_folder":"",
-        "output_folder":""
-    }
+	"number_of_chunked_data": 30,
+	"data_points_per_image": 500,
+	"zoom_factor": 100,
+	"number_of_clusters": 10,
+	
+	"path_origin_csv_file":"real_data/quaternion.csv",
+	"path_chunked_json_folder":"real_data/chunked/",
+	"image_save_folder": "tmp/kcm/",
+	"pic_to_np_array": "nparray/kcm/",
+	"image_filename_belong_cluster_npz":"tmp/kcm_kmeansAll.npz",
+	"clustering_result_csv_folder": "tmp/cluster_result_csv/",
+	"labeled_csv": "tmp/cluster_result_csv/labeled_csv/"
 
 }

@@ -17,8 +17,8 @@ from util.Util import Util
 
 sys.path.append('../')
 rootDir = '../../'
-tmpPath = rootDir + Util.getConfig('tmp_path') +'/kcm/'
-savePath = rootDir + Util.getConfig('pic_to_np_array') +'/kcm/'
+tmpPath = rootDir + Util.getConfig('image_save_folder')
+savePath = rootDir + Util.getConfig('pic_to_np_array')
 print(savePath)
 all_np_array = dict()
 
