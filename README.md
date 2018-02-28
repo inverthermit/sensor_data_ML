@@ -49,3 +49,8 @@ Because it is sufficient enough and does the job
 Run in cmd: 
 python classify_cluster_result.py
 to generate the final result.
+The result is the file \sensor_data_ML-first_release\tmp\result.log
+
+8. If run on a new data set, all tmp files should be removed. Open the cmd in the directory \sensor_data_ML-first_release\script\process and run the following command:
+python delete_all_tmp_files
+to delete all temp files.

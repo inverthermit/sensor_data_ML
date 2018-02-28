@@ -15,6 +15,7 @@
 	"pic_to_np_array": "nparray/kcm/",
 	"image_filename_belong_cluster_npz":"tmp/kcm_kmeansAll.npz",
 	"clustering_result_csv_folder": "tmp/cluster_result_csv/",
-	"labeled_csv": "tmp/cluster_result_csv/labeled_csv/"
+	"labeled_csv": "tmp/cluster_result_csv/labeled_csv/",
+	"result_file_path": "tmp/result.log"
 
 }

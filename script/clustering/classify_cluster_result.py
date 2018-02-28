@@ -19,7 +19,12 @@ rootDir = '../../'
 path = rootDir + Util.getConfig('labeled_csv')
 n_clusters = Util.getConfig('number_of_clusters')
 data = pd.read_csv(path + 'kcm_n_cluster'+str(n_clusters)+'.csv')
+
+f = open(rootDir +Util.getConfig('result_file_path'), 'w')
+
 print(data)
+f.write(str(data))
+f.write('\r\n')
 data['sum'] =data['cluster'+str(0)]
 for i in range(1, n_clusters):
     data['sum'] += data['cluster'+str(i)]
@@ -30,6 +35,8 @@ for i in range(n_clusters):
     train_data_title.append('percentage'+str(i))
 train_data_title.append('label')
 print(data[train_data_title])
+f.write(str(data[train_data_title]))
+f.write('\r\n')
 train_data = data[train_data_title].as_matrix()
 
 # print(len(train_data))
@@ -52,17 +59,25 @@ y = train_data[:,len(train_data[0])-1]
 # print(X,y)
 cross_val_score = cross_val_score(clf, X, y, cv=10)
 print(cross_val_score)
+f.write(str(cross_val_score))
+f.write('\r\n')
 print(np.mean(cross_val_score))
+f.write(str(np.mean(cross_val_score)))
+f.write('\r\n')
 
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix
 y_pred = cross_val_predict(clf,X,y,cv=10)
 conf_mat = confusion_matrix(y,y_pred)
 print(conf_mat)
+f.write(str(conf_mat))
+f.write('\r\n')
 #
 from sklearn.metrics import classification_report
 target_names = ['0', '1']
 print(classification_report(y,y_pred, target_names=target_names))
+f.write(str(classification_report(y,y_pred, target_names=target_names)))
 # print(cross_val_score(clf, X, y, cv=10))
 # clf.fit(X,y)
 # dot_data = tree.export_graphviz(clf, out_file='D:/graphviz-2.38/release/bin/data/decision_tree.dot')
+f.close()
